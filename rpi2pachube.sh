@@ -35,9 +35,8 @@ mem_cached=`cat /proc/meminfo | grep ^Cached | awk '{r=$2/1024; printf "%0.2f", 
 # Read cpu avg (cpu_one and cpu_fifteen unused, feel free to add)
 read cpu_one cpu_five cpu_fifteen < /proc/loadavg
 
-# Read temperature (some systems do not define LD_LIBRARY_PATH)
-temp=$(env LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/vc/lib \
-	/opt/vc/bin/vcgencmd measure_temp | sed "s/temp=\([0-9]\+\.[0-9]\+\)'C/\1/")
+# Read temperature
+temp=`cat /sys/class/thermal/thermal_zone0/temp | awk '{r=$1/1024; printf "%0.2f", r}'`
 
 # Read process count (remove ps, wc and cron from the count)
 pid_count=`expr $(ps -e | wc -l) - 3`
